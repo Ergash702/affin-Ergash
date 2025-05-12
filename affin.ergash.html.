@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Affine Cipher Encryption</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      padding: 20px;
+    }
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      background: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+    input, button, textarea {
+      width: 100%;
+      padding: 10px;
+      margin: 8px 0;
+      font-size: 16px;
+      border-radius: 5px;
+      border: 1px solid #ddd;
+    }
+    button {
+      background-color: #4CAF50;
+      color: white;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #45a049;
+    }
+    h2 {
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h2>Affine Cipher Encryption</h2>
+    <label for="inputText">Enter Text (lowercase letters only):</label>
+    <textarea id="inputText" rows="5" placeholder="Enter text to encrypt..."></textarea>
+
+    <label for="keyA">Enter Key 'a' (must be coprime with 26):</label>
+    <input type="number" id="keyA" placeholder="Enter key a">
+
+    <label for="keyB">Enter Key 'b':</label>
+    <input type="number" id="keyB" placeholder="Enter key b">
+
+    <button onclick="encryptAffine()">Encrypt</button>
+
+    <h3>Encrypted Message:</h3>
+    <div id="output"></div>
+  </div>
+
+  <script>
+    function modInverse(a, m) {
+      for (let x = 1; x < m; x++) {
+        if ((a * x) % m === 1) {
+          return x;
+        }
+      }
+      return -1; // No modular inverse
+    }
+
+    function encryptAffine() {
+      let inputText = document.getElementById('inputText').value.toLowerCase();
+      inputText = inputText.replace(/[^a-z]/g, '');  // Remove non-alphabetic characters
+      let keyA = parseInt(document.getElementById('keyA').value);
+      let keyB = parseInt(document.getElementById('keyB').value);
+      const m = 26;
+
+      // Check if 'a' is coprime with 26
+      if (modInverse(keyA, m) === -1) {
+        alert("Key 'a' must be coprime with 26.");
+        return;
+      }
+
+      let encryptedMessage = '';
+      for (let i = 0; i < inputText.length; i++) {
+        let x = inputText.charCodeAt(i) - 97; // Convert char to number (0-25)
+        let encryptedChar = (keyA * x + keyB) % m; // Affine encryption formula
+        encryptedMessage += String.fromCharCode(encryptedChar + 97); // Convert back to char
+      }
+
+      document.getElementById('output').textContent = encryptedMessage;
+    }
+  </script>
+
+</body>
+</html>
